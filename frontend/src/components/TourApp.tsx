@@ -25,7 +25,6 @@ export default function TourApp({ lang, onLangChange }: Props) {
   }, [lang]);
 
   useEffect(() => {
-    // When language changes, reload current scene in new lang
     if (scene) {
       loadScene(scene.sceneId);
     } else {
@@ -33,11 +32,6 @@ export default function TourApp({ lang, onLangChange }: Props) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
-
-  useEffect(() => {
-    if (!scene) loadScene();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   if (error) {
     return (
