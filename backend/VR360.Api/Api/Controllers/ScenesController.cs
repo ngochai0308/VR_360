@@ -83,6 +83,30 @@ public class ScenesController(AppDbContext db) : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateSceneRequest req)
+    {
+        var scene = await db.Scenes
+            .Include(s => s.Translations)
+            .FirstOrDefaultAsync(s => s.SceneId == id);
+        if (scene is null) return NotFound();
+
+        if (req.SlugDiTich is not null)
+            scene.SlugDiTich = req.SlugDiTich;
+
+        foreach (var t in req.Translations)
+        {
+            var existing = scene.Translations.FirstOrDefault(x => x.LanguageCode == t.LanguageCode);
+            if (existing is not null)
+                existing.TieuDe = t.TieuDe ?? existing.TieuDe;
+            else
+                scene.Translations.Add(new SceneTranslation { LanguageCode = t.LanguageCode, TieuDe = t.TieuDe ?? "" });
+        }
+
+        await db.SaveChangesAsync();
+        return NoContent();
+    }
+
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

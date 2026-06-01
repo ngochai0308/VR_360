@@ -49,6 +49,11 @@ public record HotspotTranslationRequest(
     string? UrlAudio
 );
 
+public record UpdateSceneRequest(
+    string? SlugDiTich,
+    IEnumerable<SceneTranslationRequest> Translations
+);
+
 public record UpdateHotspotRequest(
     string Type,
     double Yaw,
